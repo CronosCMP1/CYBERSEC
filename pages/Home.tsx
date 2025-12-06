@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { getArticles } from '../services/data';
 import { Article } from '../types';
 import ArticleCard from '../components/ArticleCard';
-import { Terminal, Loader, AlertCircle, Database, Copy, Check } from 'lucide-react';
+import { Terminal, Loader, Database, Copy, Check } from 'lucide-react';
 
 const SETUP_SQL = `-- Copie e execute este SQL no Editor SQL do Supabase
 -- Cria a tabela de artigos
@@ -163,56 +163,78 @@ const Home: React.FC = () => {
         <Terminal className="mb-4 h-12 w-12 text-gray-400" />
         <h2 className="text-2xl font-bold text-gray-900">Nenhuma transmissão encontrada</h2>
         <p className="text-gray-600 mb-6">O banco de dados está vazio. Crie seu primeiro artigo.</p>
-        <a href="/#/admin" className="rounded-lg bg-cyber-600 px-6 py-2 font-medium text-white hover:bg-cyber-700 transition-colors">
+        <a href="/#/admin/create" className="rounded-lg bg-cyber-600 px-6 py-2 font-medium text-white hover:bg-cyber-700 transition-colors">
           Escrever Primeiro Artigo
         </a>
       </div>
     );
   }
 
-  // 1-3-2 Layout Logic
-  const heroPost = articles[0];
-  const featuredPosts = articles.slice(1, 4);
-  const archivePosts = articles.slice(4);
+  // --- REPEATING 1-3-2 LOGIC ---
+  // We chunk the articles array into groups of 6.
+  // Each chunk follows the pattern: 1 Hero + 3 Featured + 2 Archive
+  const chunks = [];
+  for (let i = 0; i < articles.length; i += 6) {
+    chunks.push(articles.slice(i, i + 6));
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
-      
-      {/* SECTION 1: The "1" (Hero) */}
-      <section className="mb-8 md:mb-12 animate-fade-in-up">
-        <ArticleCard article={heroPost} variant="hero" />
-      </section>
+      {chunks.map((chunk, index) => {
+        // Slice the current chunk into the 1-3-2 components
+        const heroPost = chunk[0];
+        const threeRowPosts = chunk.slice(1, 4);
+        const twoRowPosts = chunk.slice(4, 6);
 
-      {/* SECTION 2: The "3" (Featured Row) */}
-      {featuredPosts.length > 0 && (
-        <section className="mb-8 md:mb-16">
-          <div className="mb-6 flex items-center gap-2">
-            <span className="h-px flex-1 bg-dark-700"></span>
-            <span className="text-xs font-mono uppercase tracking-widest text-cyber-600">Últimas Transmissões</span>
-            <span className="h-px flex-1 bg-dark-700"></span>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredPosts.map((post) => (
-              <ArticleCard key={post.id} article={post} />
-            ))}
-          </div>
-        </section>
-      )}
+        return (
+          <div key={index} className="mb-16 border-b border-gray-100 pb-16 last:border-0 last:mb-0 last:pb-0">
+            {/* 1. The HERO (1) */}
+            {heroPost && (
+              <section className="mb-8 md:mb-12 animate-fade-in-up">
+                <ArticleCard article={heroPost} variant="hero" />
+              </section>
+            )}
 
-      {/* SECTION 3: The "2" (Archive Grid) */}
-      {archivePosts.length > 0 && (
-        <section>
-          <div className="mb-6 flex items-center gap-2">
-             <span className="text-xs font-mono uppercase tracking-widest text-gray-500">Arquivo</span>
-             <span className="h-px flex-1 bg-dark-700"></span>
+            {/* 2. The ROW OF 3 */}
+            {threeRowPosts.length > 0 && (
+              <section className="mb-8 md:mb-12">
+                {/* Only show header on the very first block to keep subsequent blocks cleaner, 
+                    or remove the condition to repeat headers. Removing for cleaner look. */}
+                {index === 0 && (
+                  <div className="mb-6 flex items-center gap-2">
+                    <span className="h-px flex-1 bg-dark-700"></span>
+                    <span className="text-xs font-mono uppercase tracking-widest text-cyber-600">Destaques</span>
+                    <span className="h-px flex-1 bg-dark-700"></span>
+                  </div>
+                )}
+                
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {threeRowPosts.map((post) => (
+                    <ArticleCard key={post.id} article={post} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 3. The ROW OF 2 */}
+            {twoRowPosts.length > 0 && (
+              <section>
+                {index === 0 && (
+                  <div className="mb-6 flex items-center gap-2">
+                     <span className="text-xs font-mono uppercase tracking-widest text-gray-500">Arquivo</span>
+                     <span className="h-px flex-1 bg-dark-700"></span>
+                  </div>
+                )}
+                <div className="grid gap-6 md:grid-cols-2">
+                  {twoRowPosts.map((post) => (
+                    <ArticleCard key={post.id} article={post} variant="standard" className="md:flex-row md:h-64" />
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {archivePosts.map((post) => (
-              <ArticleCard key={post.id} article={post} variant="standard" className="md:flex-row md:h-64" />
-            ))}
-          </div>
-        </section>
-      )}
+        );
+      })}
     </div>
   );
 };
