@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Shield, Search, Menu, X, Terminal, PenTool } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Shield, Search, Menu, X, Settings, LogOut } from 'lucide-react';
 import { ArticleCategory } from '../types';
+import { getCurrentUser, signOut } from '../services/auth';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,9 +10,24 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const isActive = (path: string) => location.pathname === path;
+  useEffect(() => {
+    checkAuth();
+  }, [location.pathname]);
+
+  const checkAuth = async () => {
+    const user = await getCurrentUser();
+    setIsAuthenticated(!!user);
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    setIsAuthenticated(false);
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-dark-900 text-gray-900">
@@ -49,13 +65,33 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 className="h-9 w-64 rounded-full border border-dark-700 bg-dark-800 pl-10 pr-4 text-sm text-gray-800 focus:border-cyber-500 focus:outline-none focus:ring-1 focus:ring-cyber-500 transition-all placeholder:text-gray-500"
               />
             </div>
-            <Link 
-              to="/admin" 
-              className="flex items-center gap-2 rounded-lg border border-dark-700 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-black transition-colors"
-            >
-              <PenTool size={14} />
-              <span>Escrever</span>
-            </Link>
+            
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                 <Link 
+                  to="/dashboard" 
+                  className="flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 text-gray-600 hover:text-cyber-600 hover:border-cyber-500 transition-all bg-gray-50"
+                  title="Painel de Controle"
+                >
+                  <Settings size={18} />
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 text-gray-600 hover:text-red-500 hover:border-red-200 transition-all bg-gray-50"
+                  title="Sair"
+                >
+                  <LogOut size={18} />
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/login" 
+                className="flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 text-gray-400 hover:text-gray-900 hover:border-gray-400 transition-all hover:bg-gray-50"
+                title="Acesso Admin"
+              >
+                <Settings size={18} />
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -79,7 +115,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 {ArticleCategory.CYBERSECURITY}
               </Link>
               <hr className="border-dark-700" />
-              <Link to="/admin" className="text-base font-medium text-cyber-600" onClick={() => setIsMenuOpen(false)}>Painel Admin</Link>
+              {isAuthenticated ? (
+                <>
+                  <Link to="/dashboard" className="text-base font-medium text-cyber-600" onClick={() => setIsMenuOpen(false)}>Painel de Controle</Link>
+                  <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="text-left text-base font-medium text-red-500">Sair</button>
+                </>
+              ) : (
+                <Link to="/login" className="text-base font-medium text-gray-500" onClick={() => setIsMenuOpen(false)}>Login Admin</Link>
+              )}
             </nav>
           </div>
         )}

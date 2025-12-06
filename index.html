@@ -30,16 +30,23 @@
                 900: '#134e4a',
                 950: '#042f2e',
               },
-              // Remapping "dark" colors to light values for the white theme request
-              // keeping the class names to minimize refactoring logic errors, but visually it will be white
               dark: {
-                900: '#ffffff',     // Main background (White)
-                950: '#f8fafc',     // Footer background (Slate 50)
-                800: '#f1f5f9',     // Secondary/Inputs (Slate 100)
-                700: '#e2e8f0',     // Borders (Slate 200)
-                600: '#94a3b8',     // Muted text
-                card: '#ffffff',    // Card background
-                border: '#e2e8f0',  // Border color
+                900: '#ffffff',
+                950: '#f8fafc',
+                800: '#f1f5f9',
+                700: '#e2e8f0',
+                600: '#94a3b8',
+                card: '#ffffff',
+                border: '#e2e8f0',
+              }
+            },
+            animation: {
+              'fade-in-up': 'fadeInUp 0.5s ease-out',
+            },
+            keyframes: {
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
               }
             }
           }
@@ -51,7 +58,6 @@
         background-color: #ffffff;
         color: #18181b;
       }
-      /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -87,7 +93,9 @@
     "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.10.1",
     "react/": "https://aistudiocdn.com/react@^19.2.1/",
     "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.1/client",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.1",
     "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
   }
 }
