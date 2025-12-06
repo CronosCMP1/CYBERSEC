@@ -171,8 +171,6 @@ const Home: React.FC = () => {
   }
 
   // --- REPEATING 1-3-2 LOGIC ---
-  // We chunk the articles array into groups of 6.
-  // Each chunk follows the pattern: 1 Hero + 3 Featured + 2 Archive
   const chunks = [];
   for (let i = 0; i < articles.length; i += 6) {
     chunks.push(articles.slice(i, i + 6));
@@ -180,6 +178,14 @@ const Home: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
+      
+      {/* Banner Request: "CYBERSECURITY" with borders */}
+      <div className="mb-12 border-y border-gray-200 py-10 text-center">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tight text-gray-900 uppercase font-sans">
+          CYBERSECURITY
+        </h1>
+      </div>
+
       {chunks.map((chunk, index) => {
         // Slice the current chunk into the 1-3-2 components
         const heroPost = chunk[0];
@@ -198,16 +204,6 @@ const Home: React.FC = () => {
             {/* 2. The ROW OF 3 */}
             {threeRowPosts.length > 0 && (
               <section className="mb-8 md:mb-12">
-                {/* Only show header on the very first block to keep subsequent blocks cleaner, 
-                    or remove the condition to repeat headers. Removing for cleaner look. */}
-                {index === 0 && (
-                  <div className="mb-6 flex items-center gap-2">
-                    <span className="h-px flex-1 bg-dark-700"></span>
-                    <span className="text-xs font-mono uppercase tracking-widest text-cyber-600">Destaques</span>
-                    <span className="h-px flex-1 bg-dark-700"></span>
-                  </div>
-                )}
-                
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {threeRowPosts.map((post) => (
                     <ArticleCard key={post.id} article={post} />
@@ -219,12 +215,6 @@ const Home: React.FC = () => {
             {/* 3. The ROW OF 2 */}
             {twoRowPosts.length > 0 && (
               <section>
-                {index === 0 && (
-                  <div className="mb-6 flex items-center gap-2">
-                     <span className="text-xs font-mono uppercase tracking-widest text-gray-500">Arquivo</span>
-                     <span className="h-px flex-1 bg-dark-700"></span>
-                  </div>
-                )}
                 <div className="grid gap-6 md:grid-cols-2">
                   {twoRowPosts.map((post) => (
                     <ArticleCard key={post.id} article={post} variant="standard" className="md:flex-row md:h-64" />

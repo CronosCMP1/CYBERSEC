@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Shield, Search, Menu, X, Settings, LogOut } from 'lucide-react';
+import { Shield, Search, Menu, X, Settings, LogOut, Linkedin, Instagram } from 'lucide-react';
 import { ArticleCategory } from '../types';
 import { getCurrentUser, signOut } from '../services/auth';
 
@@ -31,38 +31,47 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-dark-900 text-gray-900">
-      {/* Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b border-dark-700 bg-white/80 backdrop-blur-xl">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+      {/* Navbar - Updated Color #056aa5 */}
+      <header className="sticky top-0 z-50 w-full border-b border-[#045a8d] bg-[#056aa5] shadow-md">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 relative">
           
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative flex items-center justify-center p-2 rounded bg-dark-800 border border-dark-700 group-hover:border-cyber-500 transition-colors">
-              <Shield className="h-5 w-5 text-cyber-600" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-gray-900 font-mono">
-              CYBER<span className="text-cyber-600">SEC</span>
+          {/* Logo - White (Text Only) */}
+          <Link to="/" className="flex items-center gap-2 group z-10">
+            <span className="text-xl font-bold tracking-tight text-white font-mono">
+              CYBERSEC
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link 
-              to={`/?category=${ArticleCategory.CYBERSECURITY}`} 
-              className="text-sm font-medium text-gray-600 hover:text-cyber-600 transition-colors"
+          {/* Center Social Links (Replaces Cibersegurança text) */}
+          <nav className="hidden md:flex items-center gap-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <a 
+              href="https://www.linkedin.com/in/cybersec-blog-4859ab380/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGns07yR29SgGW83fidKoDsz-TIQ_8IaKRReDtZOy95yBYnmMPJ70zOdU_cGE0_aem_QLDMrUCOxwcTP50kNvOw5Q" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-white/80 hover:text-white transition-colors hover:scale-110 transform duration-200"
+              title="LinkedIn"
             >
-              {ArticleCategory.CYBERSECURITY}
-            </Link>
+              <Linkedin size={22} />
+            </a>
+            <a 
+              href="https://www.instagram.com/cybersecblog/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-white/80 hover:text-white transition-colors hover:scale-110 transform duration-200"
+              title="Instagram"
+            >
+              <Instagram size={22} />
+            </a>
           </nav>
 
           {/* Right Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 z-10">
             <div className="relative group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-cyber-600" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-[#056aa5]" />
               <input 
                 type="text" 
                 placeholder="Buscar artigos..." 
-                className="h-9 w-64 rounded-full border border-dark-700 bg-dark-800 pl-10 pr-4 text-sm text-gray-800 focus:border-cyber-500 focus:outline-none focus:ring-1 focus:ring-cyber-500 transition-all placeholder:text-gray-500"
+                className="h-9 w-64 rounded-full border border-transparent bg-white pl-10 pr-4 text-sm text-gray-800 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/20 transition-all placeholder:text-gray-400"
               />
             </div>
             
@@ -70,14 +79,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div className="flex items-center gap-2">
                  <Link 
                   to="/dashboard" 
-                  className="flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 text-gray-600 hover:text-cyber-600 hover:border-cyber-500 transition-all bg-gray-50"
+                  className="flex items-center justify-center h-9 w-9 rounded-full border border-white/20 text-white hover:bg-white/10 transition-all bg-white/10"
                   title="Painel de Controle"
                 >
                   <Settings size={18} />
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 text-gray-600 hover:text-red-500 hover:border-red-200 transition-all bg-gray-50"
+                  className="flex items-center justify-center h-9 w-9 rounded-full border border-white/20 text-white hover:bg-white/10 hover:text-red-200 transition-all bg-white/10"
                   title="Sair"
                 >
                   <LogOut size={18} />
@@ -86,7 +95,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             ) : (
               <Link 
                 to="/login" 
-                className="flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 text-gray-400 hover:text-gray-900 hover:border-gray-400 transition-all hover:bg-gray-50"
+                className="flex items-center justify-center h-9 w-9 rounded-full border border-white/20 text-white/80 hover:text-white hover:border-white transition-all hover:bg-white/10"
                 title="Acesso Admin"
               >
                 <Settings size={18} />
@@ -96,7 +105,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Mobile Menu Toggle */}
           <button 
-            className="md:hidden p-2 text-gray-600 hover:text-black"
+            className="md:hidden p-2 text-white hover:text-white/80 z-10"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X /> : <Menu />}
@@ -105,19 +114,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-dark-700 bg-white px-4 py-4">
+          <div className="md:hidden border-t border-[#045a8d] bg-white px-4 py-4 shadow-lg">
             <nav className="flex flex-col gap-4">
-              <Link 
-                to={`/?category=${ArticleCategory.CYBERSECURITY}`} 
-                className="text-base font-medium text-gray-600" 
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {ArticleCategory.CYBERSECURITY}
-              </Link>
-              <hr className="border-dark-700" />
+              <div className="flex items-center gap-4 py-2">
+                <a 
+                  href="https://www.linkedin.com/in/cybersec-blog-4859ab380/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGns07yR29SgGW83fidKoDsz-TIQ_8IaKRReDtZOy95yBYnmMPJ70zOdU_cGE0_aem_QLDMrUCOxwcTP50kNvOw5Q" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 text-gray-700 hover:text-[#056aa5]"
+                >
+                  <Linkedin size={20} />
+                  <span>LinkedIn</span>
+                </a>
+                <a 
+                  href="https://www.instagram.com/cybersecblog/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 text-gray-700 hover:text-[#056aa5]"
+                >
+                  <Instagram size={20} />
+                  <span>Instagram</span>
+                </a>
+              </div>
+              <hr className="border-gray-200" />
               {isAuthenticated ? (
                 <>
-                  <Link to="/dashboard" className="text-base font-medium text-cyber-600" onClick={() => setIsMenuOpen(false)}>Painel de Controle</Link>
+                  <Link to="/dashboard" className="text-base font-medium text-[#056aa5]" onClick={() => setIsMenuOpen(false)}>Painel de Controle</Link>
                   <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="text-left text-base font-medium text-red-500">Sair</button>
                 </>
               ) : (
@@ -145,8 +167,29 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </span>
               </Link>
               <p className="max-w-xs text-sm text-gray-500">
-                Uma plataforma de última geração para profissionais de segurança cibernética, desenvolvedores e entusiastas de tecnologia.
+                Conteúdo educativo sobre redes e cibersegurança, explicando de maneira leve e acessível, mas sem perder a profundidade técnica necessária.
               </p>
+              
+              <div className="mt-6 flex gap-4">
+                <a 
+                  href="https://www.linkedin.com/in/cybersec-blog-4859ab380/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGns07yR29SgGW83fidKoDsz-TIQ_8IaKRReDtZOy95yBYnmMPJ70zOdU_cGE0_aem_QLDMrUCOxwcTP50kNvOw5Q" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-gray-400 hover:text-cyber-600 transition-colors hover:scale-110 transform duration-200"
+                  title="LinkedIn"
+                >
+                  <Linkedin size={20} />
+                </a>
+                <a 
+                  href="https://www.instagram.com/cybersecblog/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-gray-400 hover:text-cyber-600 transition-colors hover:scale-110 transform duration-200"
+                  title="Instagram"
+                >
+                  <Instagram size={20} />
+                </a>
+              </div>
             </div>
             
             <div>
