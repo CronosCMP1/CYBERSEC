@@ -217,7 +217,7 @@ const Home: React.FC = () => {
               <section>
                 <div className="grid gap-6 md:grid-cols-2">
                   {twoRowPosts.map((post) => (
-                    <ArticleCard key={post.id} article={post} variant="standard" className="md:flex-row md:h-64" />
+                    <ArticleCard key={post.id} article={post} variant="horizontal" className="h-full" />
                   ))}
                 </div>
               </section>

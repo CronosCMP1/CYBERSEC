@@ -1,19 +1,20 @@
 import React from 'react';
 import { Article } from '../types';
-import { Clock, User } from 'lucide-react';
+import { Clock, User, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface ArticleCardProps {
   article: Article;
-  variant?: 'standard' | 'compact' | 'hero';
+  variant?: 'standard' | 'compact' | 'hero' | 'horizontal';
   className?: string;
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ article, variant = 'standard', className = '' }) => {
   const isHero = variant === 'hero';
+  const isHorizontal = variant === 'horizontal';
   
+  // --- HERO VARIANT ---
   if (isHero) {
-    // Hero card text stays white because it overlays an image
     return (
       <Link to={`/article/${article.id}`} className={`group relative block w-full h-[500px] overflow-hidden rounded-xl border border-dark-700 bg-dark-card ${className}`}>
         <img 
@@ -50,10 +51,65 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, variant = 'standard'
     );
   }
 
-  // Standard cards need text updates for white theme
+  // --- HORIZONTAL VARIANT (Optimized for 2-column rows) ---
+  if (isHorizontal) {
+    return (
+      <Link to={`/article/${article.id}`} className={`group flex flex-col md:flex-row overflow-hidden rounded-xl border border-dark-700 bg-white transition-all hover:border-cyber-500/50 hover:shadow-[0_0_20px_rgba(20,184,166,0.1)] h-full ${className}`}>
+        {/* Image Side - Fixed width on desktop */}
+        <div className="relative h-48 md:h-full md:w-2/5 overflow-hidden shrink-0">
+          <img 
+            src={article.imageUrl} 
+            alt={article.title} 
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors" />
+        </div>
+
+        {/* Content Side */}
+        <div className="flex flex-1 flex-col justify-between p-5 md:p-6">
+          <div>
+            {/* Top Meta: Category & Date */}
+            <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-2">
+              <span className="text-xs font-mono font-bold text-cyber-600 uppercase tracking-wider">
+                {article.category}
+              </span>
+              <span className="flex items-center gap-1 text-xs text-gray-400 font-mono">
+                <Calendar size={12} />
+                {new Date(article.date).toLocaleDateString('pt-BR')}
+              </span>
+            </div>
+
+            <h3 className="mb-2 text-lg md:text-xl font-bold text-gray-900 leading-snug group-hover:text-cyber-600 transition-colors line-clamp-2">
+              {article.title}
+            </h3>
+            
+            <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+              {article.excerpt}
+            </p>
+          </div>
+
+          {/* Bottom Meta: Author & Read Time */}
+          <div className="mt-auto flex items-center justify-between pt-2">
+             <div className="flex items-center gap-2 text-xs font-medium text-gray-700">
+               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-500 font-bold border border-gray-200 uppercase">
+                  {article.author.charAt(0)}
+               </div>
+               <span className="truncate max-w-[100px]">{article.author}</span>
+             </div>
+             <span className="flex items-center gap-1 text-xs text-gray-500 font-mono bg-gray-50 px-2 py-1 rounded">
+               <Clock size={12} />
+               {article.readTime}
+             </span>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // --- STANDARD VARIANT (Vertical Card) ---
   return (
-    <Link to={`/article/${article.id}`} className={`group flex flex-col overflow-hidden rounded-xl border border-dark-700 bg-white transition-all hover:border-cyber-500/50 hover:shadow-[0_0_20px_rgba(20,184,166,0.1)] ${className}`}>
-      <div className="relative h-48 w-full overflow-hidden">
+    <Link to={`/article/${article.id}`} className={`group flex flex-col overflow-hidden rounded-xl border border-dark-700 bg-white transition-all hover:border-cyber-500/50 hover:shadow-[0_0_20px_rgba(20,184,166,0.1)] h-full ${className}`}>
+      <div className="relative aspect-video w-full overflow-hidden">
         <img 
           src={article.imageUrl} 
           alt={article.title} 
@@ -70,7 +126,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, variant = 'standard'
           <span className="text-xs text-gray-500 font-mono">{article.readTime}</span>
         </div>
         
-        <h3 className="mb-3 text-xl font-bold text-gray-900 leading-tight group-hover:text-cyber-600 transition-colors">
+        <h3 className="mb-3 text-xl font-bold text-gray-900 leading-tight group-hover:text-cyber-600 transition-colors line-clamp-2">
           {article.title}
         </h3>
         
